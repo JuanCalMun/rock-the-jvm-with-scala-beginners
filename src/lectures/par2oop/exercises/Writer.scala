@@ -7,5 +7,5 @@ class Writer(firstName: String, surname: String, val year: Int) {
 
   def age(): Int = Year.now.getValue - year
 
-  override def toString = s"Writer($year, ${fullName()})"
+  override def toString = s"Writer($firstName $surname born in $year)"
 }
