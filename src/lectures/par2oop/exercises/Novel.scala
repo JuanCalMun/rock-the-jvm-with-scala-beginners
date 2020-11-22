@@ -1,6 +1,8 @@
 package lectures.par2oop.exercises
 
-class Novel(name: String, yearOfRelease: Int, var author: Writer) {
+class Novel(val name: String,
+            val yearOfRelease: Int,
+            private var author: Writer) {
 
   def authorAge(): Int = author.age()
 

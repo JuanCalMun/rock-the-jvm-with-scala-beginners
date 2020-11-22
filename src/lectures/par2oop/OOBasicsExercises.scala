@@ -19,11 +19,11 @@ object OOBasicsExercises extends App {
   private val quevedo = new Writer("Francisco", "Quevedo", 1980)
 
   private val bodasDeSangre = new Novel("Bodas de sangre", 2010, quevedo)
-  private val laCuna = new Novel("La cuna y la sepultura", 2019, quevedo)
+  private val bodasDeSangreReview: Novel = bodasDeSangre.copy(2019)
 
   println(bodasDeSangre.authorAge())
   println(bodasDeSangre)
-  println(bodasDeSangre copy 2020)
+  println(bodasDeSangreReview)
   bodasDeSangre.setWritter(lorca)
   println(bodasDeSangre)
 
