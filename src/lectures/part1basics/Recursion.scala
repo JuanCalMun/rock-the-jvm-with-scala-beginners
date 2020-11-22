@@ -19,8 +19,8 @@ object Recursion extends App {
 
 
   /*
-    *   Implement with tail recursion concatenate a string n times
-    */
+  *   Implement with tail recursion concatenate a string n times
+  */
   def concatenateString(n: Int, text: String): String = {
     @tailrec
     def concatenateStringHelper(n: Int, text: String, acc: String = ""): String =
@@ -54,5 +54,30 @@ object Recursion extends App {
   /*
   *   Fibonacci function, tail recursive
   */
+  def fibonacci(n: BigInt): BigInt = {
+    val BIG_INT_ZERO = BigInt(0)
+    val BIG_INT_ONE = BigInt(1)
 
+    @tailrec
+    def fibonacciHelper(t: BigInt, previous: BigInt, nextToPrevious: BigInt): BigInt =
+      if (t == 0) previous
+      else fibonacciHelper(t - 1, previous + nextToPrevious, previous)
+
+    n match {
+      case BIG_INT_ZERO => BIG_INT_ZERO
+      case BIG_INT_ONE => BIG_INT_ONE
+      case whoa => fibonacciHelper(n - 1, 1, 0)
+    }
+  }
+
+  println("0: " + fibonacci(0))
+  println("1: " + fibonacci(1))
+  println("2: " + fibonacci(2))
+  println("3: " + fibonacci(3))
+  println("4: " + fibonacci(4))
+  println("5: " + fibonacci(5))
+  println("6: " + fibonacci(6))
+  println("7: " + fibonacci(7))
+  println("8: " + fibonacci(8))
+  println("156: " + fibonacci(156))
 }
