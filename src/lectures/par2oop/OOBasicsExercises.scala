@@ -43,4 +43,27 @@ object OOBasicsExercises extends App {
   println(c1)
   println(c1dec)
   println(c1inc)
+
+  /*
+  *   Overload the + operator
+  *   mary + "the rockstar" => new Person "Mary (the rockstar)"
+  */
+
+
+  /*
+  *   Add an age to the Person class
+  *   Add a unary + opeartor => new person with the age + 1
+  *   +mary => mary with the age incrementer
+  */
+
+  /*
+  *   Add a "learns" metho in the Person class => "Mary learns Scala"
+  *   add a learnsScala method, calls learns method with "Scala"
+  *   Use it in postfix notation
+  */
+
+  /*
+  *   Overload the apply method
+  *   mary.apply(2) => "Mary watched Inception 2 times"
+  */
 }
