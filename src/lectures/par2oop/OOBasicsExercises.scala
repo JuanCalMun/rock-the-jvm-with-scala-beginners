@@ -1,6 +1,6 @@
 package lectures.par2oop
 
-import lectures.par2oop.exercises.{Novel, Writer}
+import lectures.par2oop.exercises.{Counter, Novel, Writer}
 
 object OOBasicsExercises extends App {
 
@@ -21,6 +21,7 @@ object OOBasicsExercises extends App {
   private val bodasDeSangre = new Novel("Bodas de sangre", 2010, quevedo)
   private val bodasDeSangreReview: Novel = bodasDeSangre.copy(2019)
 
+  println("------------- Novels and Writers")
   println(bodasDeSangre.authorAge())
   println(bodasDeSangre)
   println(bodasDeSangreReview)
@@ -34,4 +35,12 @@ object OOBasicsExercises extends App {
   * method to increment/decrement => new Counter
   * overload inc/dec to receive an amount
   */
+  println("------------- Counters")
+  private val c1 = new Counter(4)
+  private val c1dec: Counter = c1.decrement(2)
+  private val c1inc: Counter = c1.increment(2)
+
+  println(c1)
+  println(c1dec)
+  println(c1inc)
 }
