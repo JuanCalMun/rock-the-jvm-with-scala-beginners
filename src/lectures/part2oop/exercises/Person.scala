@@ -1,4 +1,4 @@
-package lectures.par2oop.exercises
+package lectures.part2oop.exercises
 
 class Person(val name: String, val age: Int) {
 
@@ -17,13 +17,12 @@ class Person(val name: String, val age: Int) {
   def +(alias: String): Person =
     new Person(s"$name($alias)", age)
 
-  def unary_+(): Person =
+  def unary_+ : Person =
     new Person(name, age + 1)
 
   def shoot(projectile: String): String = s"$name throws $projectile"
 
-  def shoot(): String = this shoot "fireball"
-
+  def shoot: String = this shoot "fireball"
 
   override def toString =
     s"Person($name, $age)"

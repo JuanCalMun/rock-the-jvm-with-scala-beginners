@@ -1,4 +1,4 @@
-package lectures.par2oop.exercises
+package lectures.part2oop.exercises
 
 class Novel(val name: String,
             val yearOfRelease: Int,

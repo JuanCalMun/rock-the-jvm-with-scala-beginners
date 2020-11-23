@@ -1,6 +1,6 @@
-package lectures.par2oop
+package lectures.part2oop
 
-import lectures.par2oop.exercises.{Counter, Novel, Person, Writer}
+import lectures.part2oop.exercises.{Counter, Novel, Person, Writer}
 
 object OOBasicsExercises extends App {
 
@@ -64,7 +64,7 @@ object OOBasicsExercises extends App {
   *   Add a unary + opeartor => new person with the age + 1
   *   +mary => mary with the age incrementer
   */
-  private val oldMario: Person = +mario
+  private val oldMario: Person = +(mario + "old")
   println(oldMario)
 
   /*
@@ -72,7 +72,7 @@ object OOBasicsExercises extends App {
   *   add a learnsScala method, calls learns method with "Scala"
   *   Use it in postfix notation
   */
-  println(mario shoot())
+  println(mario shoot)
   println(luigi shoot "a turtle shell")
 
   /*

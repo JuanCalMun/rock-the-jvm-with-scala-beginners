@@ -1,4 +1,4 @@
-package lectures.par2oop
+package lectures.part2oop
 
 object OOBasics extends App {
 

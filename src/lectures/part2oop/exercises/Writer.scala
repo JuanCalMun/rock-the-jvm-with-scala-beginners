@@ -1,4 +1,4 @@
-package lectures.par2oop.exercises
+package lectures.part2oop.exercises
 
 import java.time.Year
 
