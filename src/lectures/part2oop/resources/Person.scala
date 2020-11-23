@@ -1,4 +1,4 @@
-package lectures.part2oop.exercises
+package lectures.part2oop.resources
 
 class Person(val name: String, val age: Int) {
 

@@ -1,4 +1,4 @@
-package lectures.part2oop.exercises
+package lectures.part2oop.resources
 
 class Counter(count: Int) {
 

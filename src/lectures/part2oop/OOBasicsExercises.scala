@@ -1,6 +1,6 @@
 package lectures.part2oop
 
-import lectures.part2oop.exercises.{Counter, Novel, Person, Writer}
+import lectures.part2oop.resources.{Counter, Novel, Person, Writer}
 
 object OOBasicsExercises extends App {
 
