@@ -1,6 +1,17 @@
 package lectures.part2oop
 
-object InheritanceAndTraits extends App {
+
+/*
+*   Traits and abstract classes are very similar
+*
+*   TRAIT           ~=   Java Interface       =>    What they DO
+*   ABSTRACT CLASS  ~=   Java Abstract class  =>    What they ARE
+*/
+object Inheritance extends App {
+
+  trait Carnivore {
+    def eat(animal: Pet): Unit
+  }
 
   sealed class Pet(val name: String) {
     def talk = println("... (silence) ...")
@@ -34,18 +45,32 @@ object InheritanceAndTraits extends App {
     }
   }
 
+  final class Snake(name: String = "Snake")
+    extends Pet(name) with Carnivore {
+    def eat(animal: Pet): Unit =
+      println(s"${name} is eating ${animal.name}")
+  }
+
+  final class Mouse(name: String = "Mouse") extends Pet(name)
+
   val nora = new Cat("Nora")
   val siggy = new Cat("Siggy")
   val sansa = new Dog("Sansa")
   val unknownPet: Pet = new Dog()
 
+  val scabbers = new Mouse("Scabbers")
+  val nagini = new Snake("Nagini")
+
+
   println("*************    EAT TIME")
   siggy.eat
   nora.eat
   sansa.eat
+  nagini.eat(scabbers)
   println("*************    TALK TIME")
   siggy.talk
   sansa.talk
+  nagini.talk
   unknownPet.talk /* Guof guof!!! instead ...(silence)... */
 
 
