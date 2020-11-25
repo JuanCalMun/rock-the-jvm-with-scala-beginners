@@ -41,14 +41,14 @@ abstract class MyList[+A] {
 
 }
 
-object Empty extends MyList[Nothing] {
+case object Empty extends MyList[Nothing] {
   override def head: Nothing = throw new NoSuchElementException
 
   override def tail: MyList[Nothing] = throw new NoSuchElementException
 
   override def isEmpty: Boolean = true
 
-  override def add[B >: Nothing](element: B): MyList[B] = new Cons(element, Empty)
+  override def add[B >: Nothing](element: B): MyList[B] = Cons(element, Empty)
 
   override def printElements: String = ""
 
@@ -61,14 +61,14 @@ object Empty extends MyList[Nothing] {
   override def ++[B >: Nothing](list: MyList[B]): MyList[B] = list
 }
 
-class Cons[+A](h: A, t: MyList[A]) extends MyList[A] {
+case class Cons[+A](h: A, t: MyList[A]) extends MyList[A] {
   override def head: A = h
 
   override def tail: MyList[A] = t
 
   override def isEmpty: Boolean = false
 
-  override def add[B >: A](element: B): MyList[B] = new Cons(element, this)
+  override def add[B >: A](element: B): MyList[B] = Cons(element, this)
 
   override def printElements: String =
     if (tail isEmpty) head.toString
@@ -78,14 +78,14 @@ class Cons[+A](h: A, t: MyList[A]) extends MyList[A] {
     new Cons[B](transformer.transform(h), t.map(transformer))
 
   override def filter(predicate: MyPredicate[A]): MyList[A] =
-    if (predicate.test(h)) new Cons(h, t.filter(predicate))
+    if (predicate.test(h)) Cons(h, t.filter(predicate))
     else t.filter(predicate)
 
   override def flatMap[B](transformer: MyTransformer[A, MyList[B]]): MyList[B] =
     transformer.transform(h) ++ t.flatMap(transformer)
 
   override def ++[B >: A](list: MyList[B]): MyList[B] =
-    new Cons(h, t ++ list)
+    Cons(h, t ++ list)
 }
 
 
@@ -122,17 +122,18 @@ class StringToIntTrasnformer extends MyTransformer[String, Int] {
 }
 
 object ListTest extends App {
-  val list: MyList[Int] = new Cons(1, Empty)
-  val list2: MyList[Int] = new Cons(1, new Cons(2, new Cons(3, new Cons(4, Empty))))
+  val list: MyList[Int] = Cons(1, Empty)
+  val list2: MyList[Int] = Cons(1, Cons(2, Cons(3, Cons(4, Empty))))
+  val list2Clone: MyList[Int] = Cons(1, Cons(2, Cons(3, Cons(4, Empty))))
   val list3: MyList[Int] = list add 2 add 3 add 4 add 5 add 6 add 7 add 8
   val stringList: MyList[String] =
-    new Cons("Hello",
-      new Cons("my",
-        new Cons("name",
-          new Cons("is",
-            new Cons("Jesus",
+    Cons("Hello",
+      Cons("my",
+        Cons("name",
+          Cons("is",
+            Cons("Jesus",
               Empty)))))
-  var stringNumberList: MyList[String] = new Cons[String]("4", Empty).add("3").add("2").add("1")
+  var stringNumberList: MyList[String] = Cons[String]("4", Empty).add("3").add("2").add("1")
   println("list: " + list)
   println("list2: " + list2)
   println("list3: " + list3)
@@ -153,8 +154,13 @@ object ListTest extends App {
 
   println("list2 ++ list3: " + (list2 ++ list3))
 
-  println("list3 flatMap [n,n+1]: " + list3.flatMap((element: Int) =>
-    new Cons[Int](element, new Cons[Int](element + 1, Empty))))
+  println("list3 flatMap [n,n+1]: " + list3.flatMap(new MyTransformer[Int, MyList[Int]] {
+    override def transform(element: Int): MyList[Int] =
+      Cons[Int](element, Cons[Int](element + 1, Empty))
+  }))
 
-
+  println("\n\n\n-----------------  Use of Case")
+  println("list2: " + list2)
+  println("list2Clone: " + list2Clone)
+  println("list2 == list2Clone: " + (list2 == list2Clone))
 }
