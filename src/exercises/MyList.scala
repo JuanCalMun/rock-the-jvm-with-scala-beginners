@@ -28,7 +28,17 @@ abstract class MyList[+A] {
 
   def reverse: MyList[A] = this.reverseHelper()
 
+  def map[B](transformer: MyTransformer[A, B]): MyList[B]
+
+  def filter(predicate: MyPredicate[A]): MyList[A]
+
+  def flatMap[B](transformer: MyTransformer[A, MyList[B]]): MyList[B]
+
+  def ++[B >: A](list: MyList[B]): MyList[B]
+
   override def toString = s"[$printElements]"
+
+
 }
 
 object Empty extends MyList[Nothing] {
@@ -41,6 +51,14 @@ object Empty extends MyList[Nothing] {
   override def add[B >: Nothing](element: B): MyList[B] = new Cons(element, Empty)
 
   override def printElements: String = ""
+
+  override def map[B](transformer: MyTransformer[Nothing, B]): MyList[B] = Empty
+
+  override def filter(predicate: MyPredicate[Nothing]): MyList[Nothing] = Empty
+
+  override def flatMap[B](transformer: MyTransformer[Nothing, MyList[B]]): MyList[B] = Empty
+
+  override def ++[B >: Nothing](list: MyList[B]): MyList[B] = list
 }
 
 class Cons[+A](h: A, t: MyList[A]) extends MyList[A] {
@@ -55,6 +73,52 @@ class Cons[+A](h: A, t: MyList[A]) extends MyList[A] {
   override def printElements: String =
     if (tail isEmpty) head.toString
     else s"$head, ${tail printElements}"
+
+  override def map[B](transformer: MyTransformer[A, B]): MyList[B] =
+    new Cons[B](transformer.transform(h), t.map(transformer))
+
+  override def filter(predicate: MyPredicate[A]): MyList[A] =
+    if (predicate.test(h)) new Cons(h, t.filter(predicate))
+    else t.filter(predicate)
+
+  override def flatMap[B](transformer: MyTransformer[A, MyList[B]]): MyList[B] =
+    transformer.transform(h) ++ t.flatMap(transformer)
+
+  override def ++[B >: A](list: MyList[B]): MyList[B] =
+    new Cons(h, t ++ list)
+}
+
+
+/*
+*   1.  Generic trait MyPredicate[-T] with a little method test(T) => Boolean
+*   2.  Generic trait MyTransformer[A,B] with a method transform(A) => B
+*   3.  MyList:
+*       - map(transformer) => MyList
+*       - filter(predicate) => MyList
+*
+*     class EvenPredicate extends MyPredicate[Int]
+*     class StringToIntTransformer extends MyTransformer[String,Int]
+*
+*     [1,2,3].map(n*2) = [2,4,6]
+*     [1,2,3,4].filter(n%2) = [2,4]
+*     [1,2,3].flatMap(n => [n,n+1]) = [1,2,2,3,3,4]
+*
+*/
+
+trait MyPredicate[-T] {
+  def test(predicate: T): Boolean
+}
+
+trait MyTransformer[-A, B] {
+  def transform(element: A): B
+}
+
+class EvenPredicate extends MyPredicate[Int] {
+  override def test(n: Int): Boolean = n % 2 == 0
+}
+
+class StringToIntTrasnformer extends MyTransformer[String, Int] {
+  override def transform(text: String): Int = text.toInt
 }
 
 object ListTest extends App {
@@ -68,10 +132,29 @@ object ListTest extends App {
           new Cons("is",
             new Cons("Jesus",
               Empty)))))
+  var stringNumberList: MyList[String] = new Cons[String]("4", Empty).add("3").add("2").add("1")
   println("list: " + list)
   println("list2: " + list2)
   println("list3: " + list3)
-  println("rlist3: " + list3.reverse)
+  println("reverse list3: " + list3.reverse)
   println("stringList: " + stringList)
-  println("rstringList: " + stringList.reverse)
+  println("reverse stringList: " + stringList.reverse)
+
+  println("\n\n\n-----------------  Functions with traits")
+  println("list2: " + list2)
+  println("evenList2: " + list2.filter(new EvenPredicate))
+  println("tramsformList2 x2: " + list2.map(new MyTransformer[Int, Int] {
+    override def transform(element: Int): Int = element * 2
+  }))
+  println("tramsformList2 x2: " + list2.map((element: Int) => element * 2))
+
+  println("stringNumberList: " + stringNumberList)
+  println("stringToNumberList: " + stringNumberList.map(new StringToIntTrasnformer))
+
+  println("list2 ++ list3: " + (list2 ++ list3))
+
+  println("list3 flatMap [n,n+1]: " + list3.flatMap((element: Int) =>
+    new Cons[Int](element, new Cons[Int](element + 1, Empty))))
+
+
 }
