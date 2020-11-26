@@ -107,15 +107,11 @@ case class Cons[+A](h: A, t: MyList[A]) extends MyList[A] {
 
 object ListTest extends App {
 
-  val evenPredicate = new (Int => Boolean) {
-    override def apply(v1: Int): Boolean = v1 % 2 == 0
-  }
-  val stringToIntTrasnformer = new (String => Int) {
-    override def apply(v1: String): Int = v1.toInt
-  }
-  val duplicate = new (Int => Int) {
-    override def apply(v1: Int): Int = v1 * 2
-  }
+  val evenPredicate: Int => Boolean = _ % 2 == 0
+
+  val stringToIntTrasnformer: String => Int = _.toInt
+
+  val duplicate: Int => Int = _ * 2
 
   val list: MyList[Int] = Cons(1, Empty)
   val list2: MyList[Int] = Cons(1, Cons(2, Cons(3, Cons(4, Empty))))
@@ -140,17 +136,14 @@ object ListTest extends App {
   println("list2: " + list2)
   println("evenList2: " + list2.filter(evenPredicate))
   println("tramsformList2 x2: " + list2.map(duplicate))
-  println("tramsformList2 x2: " + list2.map((element: Int) => element * 2))
+  println("tramsformList2 x2: " + list2.map(e => e * 2))
 
   println("stringNumberList: " + stringNumberList)
   println("stringToNumberList: " + stringNumberList.map(stringToIntTrasnformer))
 
   println("list2 ++ list3: " + (list2 ++ list3))
 
-  println("list3 flatMap [n,n+1]: " + list3.flatMap(new (Int => MyList[Int]) {
-    override def apply(element: Int): MyList[Int] =
-      Cons[Int](element, Cons[Int](element + 1, Empty))
-  }))
+  println("list3 flatMap [n,n+1]: " + list3.flatMap(e => Cons[Int](e, Cons[Int](e + 1, Empty))))
 
   println("\n\n\n-----------------  Use of Case")
   println("list2: " + list2)
