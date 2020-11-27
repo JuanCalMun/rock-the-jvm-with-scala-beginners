@@ -38,8 +38,31 @@ abstract class MyList[+A] {
 
   override def toString = s"[$printElements]"
 
+  def forEach(f: A => Unit): Unit
 
+  def sort(s: (A, A) => Int): MyList[A]
+
+  def zipWith[B](list: MyList[B], f: (A, B) => B): MyList[B]
+
+  def fold[B](start: B)(f: (B, A) => B): B
 }
+
+
+/*
+*   1.  Expand MyList
+*       - Foreach method A => Unit
+*         [1,2,3].foreach(x=>println(x))
+*
+*       - Sort function ((A,A) => Int) => MyList
+*         [1,2,3].sort((x, y) => y - x) => [3, 2, 1]
+*
+*       - zipWith (list, (A, A) => B) => MyList[B]
+*         [1,2,3].zipWith(([4,5,6], x * y) => [4, 10, 18]
+*
+*       - fold (start)(function) => a value
+*         [1,2,3].fold(0))(x + y) = 6
+*
+*/
 
 case object Empty extends MyList[Nothing] {
   override def head: Nothing = throw new NoSuchElementException
@@ -59,6 +82,14 @@ case object Empty extends MyList[Nothing] {
   override def ++[B >: Nothing](list: MyList[B]): MyList[B] = list
 
   override def filter(predicate: Nothing => Boolean): MyList[Nothing] = Empty
+
+  override def forEach(f: Nothing => Unit): Unit = ()
+
+  override def sort(s: (Nothing, Nothing) => Int): MyList[Nothing] = Empty
+
+  override def zipWith[B](list: MyList[B], f: (Nothing, B) => B): MyList[B] = Empty
+
+  override def fold[B](start: B)(f: (B, Nothing) => B): B = start
 }
 
 case class Cons[+A](h: A, t: MyList[A]) extends MyList[A] {
@@ -86,24 +117,31 @@ case class Cons[+A](h: A, t: MyList[A]) extends MyList[A] {
 
   override def ++[B >: A](list: MyList[B]): MyList[B] =
     Cons(h, t ++ list)
+
+  override def forEach(f: A => Unit): Unit = {
+    f(h)
+    t.forEach(f)
+  }
+
+  override def sort(sortBy: (A, A) => Int): MyList[A] = {
+    def insertSorted(head: A, sortedList: MyList[A]): MyList[A] =
+      if (sortedList isEmpty) Cons(head, Empty)
+      else if (sortBy(head, sortedList.head) <= 0) Cons(head, sortedList.sort(sortBy))
+      else Cons(sortedList.head, insertSorted(head, sortedList.tail))
+
+    val sortedTail = tail.sort(sortBy)
+    insertSorted(h, sortedTail)
+  }
+
+  override def zipWith[B](list: MyList[B], f: (A, B) => B): MyList[B] =
+    if (list.tail.isEmpty || tail.isEmpty) Cons(f(h, list.head), Empty)
+    else Cons(f(h, list.head), tail.zipWith(list.tail, f))
+
+  override def fold[B](start: B)(f: (B, A) => B): B = {
+    t.fold(f(start, h))(f)
+  }
 }
 
-
-/*
-*   1.  Generic trait MyPredicate[-T] with a little method test(T) => Boolean
-*   2.  Generic trait MyTransformer[A,B] with a method transform(A) => B
-*   3.  MyList:
-*       - map(transformer) => MyList
-*       - filter(predicate) => MyList
-*
-*     class EvenPredicate extends MyPredicate[Int]
-*     class StringToIntTransformer extends MyTransformer[String,Int]
-*
-*     [1,2,3].map(n*2) = [2,4,6]
-*     [1,2,3,4].filter(n%2) = [2,4]
-*     [1,2,3].flatMap(n => [n,n+1]) = [1,2,2,3,3,4]
-*
-*/
 
 object ListTest extends App {
 
@@ -149,6 +187,18 @@ object ListTest extends App {
   println("list2: " + list2)
   println("list2Clone: " + list2Clone)
   println("list2 == list2Clone: " + (list2 == list2Clone))
+
+
+  println("\n\n\n-----------------  For Each")
+  println("list2.forEach(println)")
+  list2.forEach(println)
+
+  println("\n\n\n-----------------  Sort")
+  println("list2.sort((x, y) => y - x)")
+  println(list2.sort((x, y) => y - x))
+
+  println("\n\n\n-----------------  Fold")
+  println(list2.fold(20)(_ + _))
 
 
 }
