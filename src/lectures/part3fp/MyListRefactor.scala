@@ -200,5 +200,12 @@ object ListTest extends App {
   println("\n\n\n-----------------  Fold")
   println(list2.fold(20)(_ + _))
 
+  println("\n\n\n-----------------  For comprehensions")
+  private val forComprehensions: MyList[String] = for {
+    l2 <- list2
+    l3 <- list3
+  } yield s"$l2:$l3"
+  println(s"forComprehensions: $forComprehensions")
+
 
 }
