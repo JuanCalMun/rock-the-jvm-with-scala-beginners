@@ -36,9 +36,19 @@ object OptionExercises extends App {
         .map(c => c.connect))
       .foreach(c => println(s"Try $n : $c (improved)"))
 
+  private def establishConnectionBest(n: Int = 0): Unit = {
+    val connectionStatus = for {
+      h <- config.get("host")
+      p <- config.get("port")
+      connection <- Connection(h, p)
+    } yield connection.connect
+    connectionStatus.foreach(c => println(s"Try $n : $c (best)"))
+  }
+
   for (i <- 0 to 10) {
     establishConnection(i)
     establishConnectionImproved(i)
+    establishConnectionBest(i)
   }
 
 }
