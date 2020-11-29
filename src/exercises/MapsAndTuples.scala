@@ -62,6 +62,7 @@ object MapsAndTuples extends App {
     else network(person).size
 
   def mostPopularPerson(network: Map[String, Set[String]]): String = {
+    @tailrec
     def mostPopularPersonAux(network: Map[String, Set[String]],
                              acc: (String, Set[String])): String =
       if (network isEmpty) acc._1
